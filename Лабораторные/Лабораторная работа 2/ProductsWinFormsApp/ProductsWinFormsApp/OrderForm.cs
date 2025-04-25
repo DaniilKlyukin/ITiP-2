@@ -1,59 +1,58 @@
 ﻿using ProductsLibrary;
 
-namespace ProductsWinFormsApp
+namespace ProductsWinFormsApp;
+
+public partial class OrderForm : Form
 {
-    public partial class OrderForm : Form
+    public int NAME_MAX_LENGTH = 200;
+
+    public Order? Order { get; private set; }
+
+    public OrderForm()
     {
-        public int NAME_MAX_LENGTH = 200;
+        InitializeComponent();
+    }
 
-        public Order? Order { get; private set; }
+    private void confirmButton_Click(object sender, EventArgs e)
+    {
+        var customer = customersComboBox.SelectedItem as Customer;
 
-        public OrderForm()
+        if (customer == null)
         {
-            InitializeComponent();
+            MessageBox.Show("Необходимо выбрать покупателя!");
+            return;
         }
 
-        private void confirmButton_Click(object sender, EventArgs e)
+        Order = new Order(Guid.NewGuid().ToString(), customer);
+
+        var products = addedProductsListBox.Items.Cast<Product>().ToArray();
+
+        foreach (var product in products)
         {
-            var customer = customersComboBox.SelectedItem as Customer;
-
-            if (customer == null)
-            {
-                MessageBox.Show("Необходимо выбрать покупателя!");
-                return;
-            }
-
-            Order = new Order(Guid.NewGuid().ToString(), customer);
-
-            var products = addedProductsListBox.Items.Cast<Product>().ToArray();
-
-            foreach (var product in products)
-            {
-                Order.AddProduct(product);
-            }
-
-            DialogResult = DialogResult.OK;
-
-            Close();
+            Order.AddProduct(product);
         }
 
-        private void OrderForm_Load(object sender, EventArgs e)
-        {
-            customersComboBox.Items.AddRange(AppContext.Customers.ToArray());
+        DialogResult = DialogResult.OK;
 
-            productsComboBox.Items.AddRange(AppContext.Products.ToArray());
-        }
+        Close();
+    }
 
-        private void addProductButton_Click(object sender, EventArgs e)
-        {
-            var product = productsComboBox.SelectedItem as Product;
+    private void OrderForm_Load(object sender, EventArgs e)
+    {
+        customersComboBox.Items.AddRange(AppContext.Customers.ToArray());
 
-            addedProductsListBox.Items.Add(product);
-        }
+        productsComboBox.Items.AddRange(AppContext.Products.ToArray());
+    }
 
-        private void removeProductButton_Click(object sender, EventArgs e)
-        {
-            addedProductsListBox.Items.Remove(addedProductsListBox.SelectedItem);
-        }
+    private void addProductButton_Click(object sender, EventArgs e)
+    {
+        var product = productsComboBox.SelectedItem as Product;
+
+        addedProductsListBox.Items.Add(product);
+    }
+
+    private void removeProductButton_Click(object sender, EventArgs e)
+    {
+        addedProductsListBox.Items.Remove(addedProductsListBox.SelectedItem);
     }
 }

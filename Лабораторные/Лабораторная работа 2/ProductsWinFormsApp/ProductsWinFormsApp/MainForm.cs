@@ -1,86 +1,85 @@
 using ProductsLibrary;
 using System.Text;
 
-namespace ProductsWinFormsApp
+namespace ProductsWinFormsApp;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : Form
+    public MainForm()
     {
-        public MainForm()
+        InitializeComponent();
+    }
+
+    private void productsButton_Click(object sender, EventArgs e)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var product in AppContext.Products)
         {
-            InitializeComponent();
+            sb.AppendLine(product.GetProductSummary());
         }
 
-        private void productsButton_Click(object sender, EventArgs e)
+        outputTextBox.Text = sb.ToString();
+    }
+
+    private void customersButton_Click(object sender, EventArgs e)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var customer in AppContext.Customers)
         {
-            var sb = new StringBuilder();
+            sb.AppendLine(customer.GetCustomerInfo());
 
-            foreach (var product in AppContext.Products)
-            {
-                sb.AppendLine(product.GetProductSummary());
-            }
-
-            outputTextBox.Text = sb.ToString();
-        }
-
-        private void customersButton_Click(object sender, EventArgs e)
-        {
-            var sb = new StringBuilder();
-
-            foreach (var customer in AppContext.Customers)
-            {
-                sb.AppendLine(customer.GetCustomerInfo());
-
-                foreach (var order in customer.Orders)
-                {
-                    sb.AppendLine(order.GetOrderSummary());
-                }
-
-                sb.AppendLine();
-            }
-
-            outputTextBox.Text = sb.ToString();
-        }
-
-        private void ordersButton_Click(object sender, EventArgs e)
-        {
-            var sb = new StringBuilder();
-
-            foreach (var order in AppContext.Orders)
+            foreach (var order in customer.Orders)
             {
                 sb.AppendLine(order.GetOrderSummary());
             }
 
-            outputTextBox.Text = sb.ToString();
+            sb.AppendLine();
         }
 
-        private void addProductButton_Click(object sender, EventArgs e)
-        {
-            var form = new ProductForm();
+        outputTextBox.Text = sb.ToString();
+    }
 
-            if (form.ShowDialog() == DialogResult.OK && form.Product != null)
-            {
-                AppContext.Products.Add(form.Product);
-            }
+    private void ordersButton_Click(object sender, EventArgs e)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var order in AppContext.Orders)
+        {
+            sb.AppendLine(order.GetOrderSummary());
         }
 
-        private void addCustomerButton_Click(object sender, EventArgs e)
-        {
-            var form = new CustomerForm();
+        outputTextBox.Text = sb.ToString();
+    }
 
-            if (form.ShowDialog() == DialogResult.OK && form.Customer != null)
-            {
-                AppContext.Customers.Add(form.Customer);
-            }
+    private void addProductButton_Click(object sender, EventArgs e)
+    {
+        var form = new ProductForm();
+
+        if (form.ShowDialog() == DialogResult.OK && form.Product != null)
+        {
+            AppContext.Products.Add(form.Product);
         }
+    }
 
-        private void addOrderButton_Click(object sender, EventArgs e)
+    private void addCustomerButton_Click(object sender, EventArgs e)
+    {
+        var form = new CustomerForm();
+
+        if (form.ShowDialog() == DialogResult.OK && form.Customer != null)
         {
-            var form = new OrderForm();
+            AppContext.Customers.Add(form.Customer);
+        }
+    }
 
-            if (form.ShowDialog() == DialogResult.OK && form.Order != null)
-            {
-                AppContext.Orders.Add(form.Order);
-            }
+    private void addOrderButton_Click(object sender, EventArgs e)
+    {
+        var form = new OrderForm();
+
+        if (form.ShowDialog() == DialogResult.OK && form.Order != null)
+        {
+            AppContext.Orders.Add(form.Order);
         }
     }
 }
